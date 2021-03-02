@@ -1,0 +1,2 @@
+module dinoManager_Java {
+}
