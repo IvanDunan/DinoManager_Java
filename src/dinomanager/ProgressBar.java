@@ -6,8 +6,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JProgressBar;
 
-public class DinoManagerGUI extends JFrame {
+public class ProgressBar extends JFrame {
 
 	private JPanel contentPane;
 
@@ -18,7 +19,7 @@ public class DinoManagerGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DinoManagerGUI frame = new DinoManagerGUI();
+					ProgressBar frame = new ProgressBar();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -30,13 +31,16 @@ public class DinoManagerGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public DinoManagerGUI() {
+	public ProgressBar() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 450, 196);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		
+		JProgressBar barra = new JProgressBar();
+		contentPane.add(barra, BorderLayout.CENTER);
 	}
 
 }
