@@ -132,8 +132,9 @@ public class Login extends JFrame {
 		                JOptionPane.showMessageDialog(btnLogin, "Contraseña o usuario incorrecto");
 		            	System.out.println("Contraseña o usuario erroneos");
 		            }
-		        } catch (SQLException sqlException) {
+		        } catch (SQLException sqlException) { //Gracias a este bloque catch se cierra la conexión a la base de datos correctamente
 		            sqlException.printStackTrace();
+		            sqlException.getCause();
 		        }
 			}
 		});

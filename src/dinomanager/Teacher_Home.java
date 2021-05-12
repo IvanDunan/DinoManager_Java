@@ -120,13 +120,17 @@ public class Teacher_Home extends JFrame {
         			.addGap(311))
         );
         
-        JButton btnNewButton_1 = new JButton("|Consultar informe de alumnos|");
-        btnNewButton_1.setFont(new Font("Consolas", Font.BOLD, 14));
-        btnNewButton_1.addActionListener(new ActionListener() {
+        JButton btnTeacherReport = new JButton("|Consultar informe de alumnos|");
+        btnTeacherReport.setFont(new Font("Consolas", Font.BOLD, 14));
+        btnTeacherReport.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		System.out.println("Se ha pulsado el botón de informe");
+		        Table obj = new Table();
+                //obj.setTitle("Registro");
+                obj.setVisible(true);
         	}
         });
-        toolBar.add(btnNewButton_1);
+        toolBar.add(btnTeacherReport);
         
         JButton btnNewButton_2 = new JButton("|Enviar mensaje conjunto|");
         btnNewButton_2.setFont(new Font("Consolas", Font.BOLD, 14));
@@ -136,6 +140,7 @@ public class Teacher_Home extends JFrame {
         btnNewButton_3.setFont(new Font("Consolas", Font.BOLD, 14));
         btnNewButton_3.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		
         	}
         });
         toolBar.add(btnNewButton_3);

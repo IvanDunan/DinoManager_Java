@@ -159,8 +159,8 @@ public class Register extends JFrame {
 
 		lblImage2 = new JLabel("");
 		lblImage2.setIcon(
-				new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/images/DinoManager_voltered.png"))
-						.getImage().getScaledInstance(470, 500, Image.SCALE_SMOOTH)));
+				new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/images/DinoManager2_voltered.png"))
+						.getImage().getScaledInstance(450, 460, Image.SCALE_SMOOTH)));
 
 		btnRegisterTeacher = new JButton("Registrar");
 		btnRegisterTeacher.addActionListener(new ActionListener() {
