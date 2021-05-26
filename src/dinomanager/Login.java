@@ -12,7 +12,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
+
 import javax.swing.JTextField;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
@@ -20,12 +24,17 @@ import javax.swing.JOptionPane;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Font;
@@ -98,6 +107,26 @@ public class Login extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String userName = textField_UserName.getText();
 		        String password = textField_Password.getText();
+		        
+		        try {
+		            final String claveEncriptacion = "secreto!";            
+		            String datosOriginales = "hola";            
+		             
+		            AESencryptor encriptador = new AESencryptor();
+		            
+		             
+		            String encriptado = encriptador.encriptar(password, claveEncriptacion);
+		            String desencriptado = encriptador.desencriptar(encriptado, claveEncriptacion);
+		             
+		            System.out.println("Cadena Original: " + datosOriginales);
+		            System.out.println("Escriptado     : " + encriptado);
+		            System.out.println("Desencriptado  : " + desencriptado);
+		            
+		            password = encriptado;
+		             
+		        } catch (UnsupportedEncodingException | NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException ex) {
+		            Logger.getLogger(AESencryptor.class.getName()).log(Level.SEVERE, null, ex);
+		        }
 		        try {
 		        	Connection connection = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/dinomanager_database3",
 	                        "root", "root");

@@ -1,5 +1,6 @@
 package dinomanager;
 
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -7,6 +8,9 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.GroupLayout.Alignment;
@@ -17,6 +21,7 @@ import java.awt.Toolkit;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -24,14 +29,27 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.JCheckBox;
 import javax.swing.JRadioButton;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class Register extends JFrame {
 
@@ -163,6 +181,9 @@ public class Register extends JFrame {
 						.getImage().getScaledInstance(450, 460, Image.SCALE_SMOOTH)));
 
 		btnRegisterTeacher = new JButton("Registrar");
+		
+		
+		
 		btnRegisterTeacher.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { // Recogemos todos los datos de nuestros textfield
 				String Name = textField_Name.getText();
@@ -173,6 +194,27 @@ public class Register extends JFrame {
 				String Email = textField_Email.getText();
 				String Institution = textField_Institution.getText();
 				String Signature = textField_Signature.getText();
+				
+				try {
+		            final String claveEncriptacion = "secreto!";            
+		            String datosOriginales = Password;            
+		             
+		            AESencryptor encriptador = new AESencryptor();
+		             
+		            String encriptado = encriptador.encriptar(datosOriginales, claveEncriptacion);
+		            String desencriptado = encriptador.desencriptar(encriptado, claveEncriptacion);
+		             
+		            System.out.println("Cadena Original: " + datosOriginales);
+		            System.out.println("Escriptado     : " + encriptado);
+		            System.out.println("Desencriptado  : " + desencriptado);
+		            
+		            Password = encriptado;
+		             
+		        } catch (UnsupportedEncodingException | NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException ex) {
+		            Logger.getLogger(AESencryptor.class.getName()).log(Level.SEVERE, null, ex);
+		        }
+				
+				
 
 				System.out.println("Datos recogidos: " + Name + " " + Surnames + " " + UserName + " " + Password + " "
 						+ Age + " " + "m" + " " + Email + " " + Institution + " " + Signature);
@@ -180,10 +222,10 @@ public class Register extends JFrame {
 				String msg = "" + Name;
 				msg += " \n";
 				if ((Name.equals(""))||(Surnames.equals(""))||(UserName.equals(""))||(Password.equals(""))
-						||(Age.equals(""))||(Email.equals(""))) {// ALGÚN CAMPO VACÍO
+						||(Age.equals(""))||(Email.equals(""))) {// EN CASO DE ALGÚN CAMPO VACÍO
 					JOptionPane.showMessageDialog(btnRegisterTeacher, "Por favor, rellene todos los campos");
 				}
-				else if (Age.length() > 2) { //EDAD INCORRECTA
+				else if (Age.length() > 2) { //EN CASO DE EDAD INCORRECTA
 					JOptionPane.showMessageDialog(btnRegisterTeacher, "Por favor, introduce una edad correcta");
 				} else {
 					try {
