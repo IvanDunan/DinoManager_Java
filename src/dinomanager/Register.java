@@ -164,10 +164,28 @@ public class Register extends JFrame {
 		lblNewLabel_2.setFont(new Font("Consolas", Font.BOLD, 14));
 
 		JCheckBox chckbxTeacher = new JCheckBox("Profesor");
-		chckbxTeacher.setSelected(true);
 
 		JCheckBox chckbxStudent = new JCheckBox("Alumno");
-
+		
+		JCheckBox chckbxMale = new JCheckBox("Hombre");
+		
+		JCheckBox chckbxFemale = new JCheckBox("Mujer");
+		
+		if (chckbxTeacher.isSelected()) {
+			chckbxStudent.setEnabled(false);
+		}
+		if (chckbxStudent.isSelected()) {
+			chckbxTeacher.setEnabled(false);
+		}
+		
+		if (chckbxMale.isSelected()) {
+			chckbxFemale.setEnabled(false);
+		}
+		
+		if (chckbxFemale.isSelected()) {
+			chckbxMale.setEnabled(false);
+		}
+		
 		/**
 		 * while (chckbxTeacher.isSelected()) { chckbxStudent.setSelected(false); }
 		 **/
@@ -194,19 +212,41 @@ public class Register extends JFrame {
 				String Email = textField_Email.getText();
 				String Institution = textField_Institution.getText();
 				String Signature = textField_Signature.getText();
+				char Sex='m';
+				int UserType = 1;
+				
+				if(chckbxTeacher.isSelected()) //Compruebo si el checkbox del profesor está marcado
+				{
+					UserType=1;
+				}
+				else if (chckbxStudent.isSelected()) //Si ese usuario no es profesor entoces es alumno
+				{
+					UserType=2;
+				}
+				
+				if(chckbxMale.isSelected()) //Compruebo si el checkbox del profesor está marcado
+				{
+					Sex='m';
+				}
+				else if (chckbxFemale.isSelected()) //Si ese usuario no es profesor entoces es alumno
+				{
+					Sex='f';
+				}
+				
 				
 				try {
 		            final String claveEncriptacion = "secreto!";            
 		            String datosOriginales = Password;            
 		             
 		            AESencryptor encriptador = new AESencryptor();
+		            
+		            
 		             
 		            String encriptado = encriptador.encriptar(datosOriginales, claveEncriptacion);
 		            String desencriptado = encriptador.desencriptar(encriptado, claveEncriptacion);
 		             
-		            System.out.println("Cadena Original: " + datosOriginales);
-		            System.out.println("Escriptado     : " + encriptado);
-		            System.out.println("Desencriptado  : " + desencriptado);
+		            
+		            System.out.println("Contraseña encriptada correctamente     : " + encriptado);
 		            
 		            Password = encriptado;
 		             
@@ -217,7 +257,7 @@ public class Register extends JFrame {
 				
 
 				System.out.println("Datos recogidos: " + Name + " " + Surnames + " " + UserName + " " + Password + " "
-						+ Age + " " + "m" + " " + Email + " " + Institution + " " + Signature);
+						+ Age + " " + Sex + " " + Email + " " + Institution + " " + Signature);
 
 				String msg = "" + Name;
 				msg += " \n";
@@ -232,10 +272,10 @@ public class Register extends JFrame {
 						Connection connection = (Connection) DriverManager
 								.getConnection("jdbc:mysql://localhost:3306/dinomanager_database3", "root", "root");
 						
-
+						
 						String query = "INSERT INTO users values('" + "0" + "','" + UserName + "','" + Password + "','"
-								+ Name + "','" + Surnames + "','" + "m" + "','" + Age + "','" + Email + "','" + 1
-								+ "','" + 1 + "','" + 1 + "')";
+								+ Name + "','" + Surnames + "','" + Sex + "','" + Age + "','" + Email + "','" + 1
+								+ "','" + UserType + "','" + 1 + "')";
 
 						Statement sta = connection.createStatement();
 						int x = sta.executeUpdate(query);
@@ -244,6 +284,8 @@ public class Register extends JFrame {
 						} else {
 							JOptionPane.showMessageDialog(btnRegisterTeacher,
 									"Bienvenido, " + msg + "tu cuanta ha sido creada correctamente");
+							//EmailSenderService m=new EmailSenderService("config/configuracion.prop");
+							
 						}
 						connection.close();
 					} catch (Exception exception) {
@@ -260,9 +302,9 @@ public class Register extends JFrame {
 
 		lblNewLabel = new JLabel("\u00A9 2021 - DinoManager");
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Hombre");
 		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Mujer");
+		
+		
 
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
@@ -284,22 +326,22 @@ public class Register extends JFrame {
 								.addComponent(lblNewLabel_3))
 							.addGap(31)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(rdbtnNewRadioButton, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(rdbtnNewRadioButton_1, GroupLayout.PREFERRED_SIZE, 63, GroupLayout.PREFERRED_SIZE))
+								.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+									.addComponent(chckbxMale)
+									.addPreferredGap(ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+									.addComponent(chckbxFemale, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(chckbxTeacher)
-									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addPreferredGap(ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
 									.addComponent(chckbxStudent, GroupLayout.PREFERRED_SIZE, 78, GroupLayout.PREFERRED_SIZE))
-								.addComponent(textField_Signature, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-								.addComponent(textField_Institution, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-								.addComponent(textField_Email, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-								.addComponent(textField_Age, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-								.addComponent(textField_Password, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-								.addComponent(textField_UserName, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-								.addComponent(textField_Name, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-								.addComponent(textField_Surnames, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)))
+								.addComponent(textField_Signature, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+								.addComponent(textField_Institution, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+								.addComponent(textField_Email, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+								.addComponent(textField_Age, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+								.addComponent(textField_Password, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+								.addComponent(textField_UserName, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+								.addComponent(textField_Name, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+								.addComponent(textField_Surnames, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(btnRegisterTeacher, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE)))
@@ -307,7 +349,7 @@ public class Register extends JFrame {
 					.addComponent(lblImage2, GroupLayout.PREFERRED_SIZE, 441, GroupLayout.PREFERRED_SIZE)
 					.addGap(53))
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(796, Short.MAX_VALUE)
+					.addContainerGap(862, Short.MAX_VALUE)
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
@@ -315,9 +357,9 @@ public class Register extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(lblImage2, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 465, Short.MAX_VALUE)
+						.addComponent(lblImage2, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 503, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addContainerGap(44, Short.MAX_VALUE)
+							.addContainerGap(94, Short.MAX_VALUE)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblName)
 								.addComponent(textField_Name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -340,8 +382,8 @@ public class Register extends JFrame {
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblSex)
-								.addComponent(rdbtnNewRadioButton)
-								.addComponent(rdbtnNewRadioButton_1))
+								.addComponent(chckbxMale)
+								.addComponent(chckbxFemale))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblEmail)

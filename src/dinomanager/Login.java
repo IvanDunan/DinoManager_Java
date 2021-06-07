@@ -38,6 +38,7 @@ import java.util.logging.Logger;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import java.awt.Font;
+import javax.swing.JSeparator;
 
 public class Login extends JFrame {
 
@@ -105,11 +106,11 @@ public class Login extends JFrame {
 		btnLogin.setFont(new Font("Consolas", Font.BOLD, 14));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String userName = textField_UserName.getText();
-		        String password = textField_Password.getText();
+				String userName = textField_UserName.getText(); //Guardamos en una variable el usuario introducido en el textfield de nuestra interfaz javaswing
+		        String password = textField_Password.getText(); //Guardamos en una variable la contraseña introducida en el textfield de nuestra interfaz javaswing
 		        
 		        try {
-		            final String claveEncriptacion = "secreto!";            
+		            final String claveEncriptacion = "secreto!"; //Clave para la encriptación AES (Sin ella nadie puede desencriptar la contraseña guardada en la base de datos).            
 		            String datosOriginales = "hola";            
 		             
 		            AESencryptor encriptador = new AESencryptor();
@@ -118,9 +119,9 @@ public class Login extends JFrame {
 		            String encriptado = encriptador.encriptar(password, claveEncriptacion);
 		            String desencriptado = encriptador.desencriptar(encriptado, claveEncriptacion);
 		             
-		            System.out.println("Cadena Original: " + datosOriginales);
+		            
 		            System.out.println("Escriptado     : " + encriptado);
-		            System.out.println("Desencriptado  : " + desencriptado);
+		            
 		            
 		            password = encriptado;
 		             
@@ -128,14 +129,16 @@ public class Login extends JFrame {
 		            Logger.getLogger(AESencryptor.class.getName()).log(Level.SEVERE, null, ex);
 		        }
 		        try {
-		        	Connection connection = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/dinomanager_database3",
-	                        "root", "root");
-
-	                    PreparedStatement st = (PreparedStatement) connection
-	                        .prepareStatement("Select user_name, password from users where user_name=? and password=?");
+		        	//ESTABLEZCO LA CONEXIÓN A LA BASE DE DATOS
+		        	Connection connection = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/dinomanager_database3","root", "root"); 
+		        	
+		        	//CREO MI OBJETO STATEMENT Y EJECUTO LA QUERY
+	                PreparedStatement st = (PreparedStatement) connection.prepareStatement("Select user_name, password from users where user_name=? and password=?"); //Se comprueban todos los usuarios y sus contraseñas
 		            
 		            st.setString(1, userName);
 		            st.setString(2, password);
+		            
+		            
 		            ResultSet rs = st.executeQuery();
 		            if (userName.equals("") && userName.equals("")) { //En caso de que ambos campos estén vacíos se exigirá que se rellenen.
 		            	JOptionPane.showMessageDialog(btnLogin, "Por favor, introduzca algún valor en los campos.");
@@ -155,7 +158,7 @@ public class Login extends JFrame {
 		                Teacher_Home ah = new Teacher_Home(userName);
 		                ah.setTitle("Bienvenido ");
 		                ah.setVisible(true);
-		                JOptionPane.showMessageDialog(btnLogin, "Bienvenido, se ha iniciado sesión correctamente");
+		                JOptionPane.showMessageDialog(btnLogin, "Bienvenido "+ userName +", se ha iniciado sesión correctamente");
 		                System.out.println("Se ha iniciado sesión correctamente");
 		            } else { //En caso de que la información no coincida con la base de datos
 		                JOptionPane.showMessageDialog(btnLogin, "Contraseña o usuario incorrecto");
@@ -191,6 +194,15 @@ public class Login extends JFrame {
 		lblNewLabel.setFont(new Font("Consolas", Font.BOLD, 12));
 		
 		JButton btnNewButton = new JButton("Recuperar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Se ha pulsado el botón de recuperación de contraseña");
+		        PasswordRecover obj = new PasswordRecover();
+                obj.setTitle("Registro");
+                obj.setVisible(true);
+				
+			}
+		});
 		
 		JLabel lblNewLabel_1 = new JLabel("\u00A9 2021 - DinoManager");
 		 
@@ -200,6 +212,7 @@ public class Login extends JFrame {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(lblImage)
+					.addGap(31)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(18)
@@ -210,10 +223,10 @@ public class Login extends JFrame {
 										.addComponent(lblPassword))
 									.addGap(18)
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(textField_Password, GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
-										.addComponent(btnLogin, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
-										.addComponent(btnRegister, GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
-										.addComponent(textField_UserName, GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE))
+										.addComponent(textField_Password, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+										.addComponent(btnLogin, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+										.addComponent(btnRegister, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+										.addComponent(textField_UserName, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE))
 									.addGap(158))
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addComponent(lblImageLogo, GroupLayout.PREFERRED_SIZE, 361, GroupLayout.PREFERRED_SIZE)
@@ -229,7 +242,7 @@ public class Login extends JFrame {
 							.addGap(156))))
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblImage)
@@ -254,7 +267,7 @@ public class Login extends JFrame {
 								.addComponent(lblNewLabel))
 							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(lblNewLabel_1)))
-					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+					.addContainerGap(38, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 		 
