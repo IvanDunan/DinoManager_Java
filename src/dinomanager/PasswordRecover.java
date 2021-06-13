@@ -26,6 +26,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
 import java.util.Properties;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
+import java.awt.SystemColor;
+import java.awt.Color;
 
 public class PasswordRecover extends JFrame {
 
@@ -62,9 +65,10 @@ public class PasswordRecover extends JFrame {
 		Dimension ScreenSize= MyScreen.getScreenSize(); //Almacenamos el tamaño de la pantalla (Resolución) en la cual el programa se está ejecutando
 		int HeightScreen = ScreenSize.height; //Guardo en variables el alto y ancho de la pantalla
 		int WidthScreen = ScreenSize.width;
-		setBounds(WidthScreen/4+100, HeightScreen/4+100, WidthScreen/2, HeightScreen/2);
+		setBounds(WidthScreen/4, HeightScreen/4, WidthScreen/2, HeightScreen/2);
 		
 		JLabel lblNewLabel = new JLabel("Correo: ");
+		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		
 		txtCorreo = new JTextField();
 		txtCorreo.setColumns(10);
@@ -115,51 +119,69 @@ public class PasswordRecover extends JFrame {
 		});
 		
 		JLabel lblNewLabel_1 = new JLabel("Si ha olvidado su contrase\u00F1a escribanos su email aqu\u00ED, en caso de ser correcta recivir\u00E1 su contrase\u00F1a via mail.");
+		lblNewLabel_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		
 		JLabel lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settings.png")).getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH)));
+		//lblNewLabel_2.setIcon(new ImageIcon(PasswordRecover.class.getResource("/images/Settings_transparencia.png")));
+		lblNewLabel_2.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Settings_transparencia.png")).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
+		
+		JLabel lblNewLabel_1_1 = new JLabel("\u00A9 2021 - DinoManager");
+		
+		JButton btnNewButton_1 = new JButton("\u2190 Volver al login");
+		btnNewButton_1.setBackground(Color.LIGHT_GRAY);
 		
 		//JLabel lblImage = new JLabel("");
-				//lblImage.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/images/settings.png")).getImage().getScaledInstance(470, 500, Image.SCALE_SMOOTH)));
+				//lblImage.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Settings_transparencia.png")).getImage().getScaledInstance(470, 500, Image.SCALE_SMOOTH)));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(72)
-					.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 164, GroupLayout.PREFERRED_SIZE)
-					.addGap(105)
-					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
-					.addGap(28)
-					.addComponent(txtCorreo, GroupLayout.PREFERRED_SIZE, 317, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(239, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addGap(257)
-					.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-					.addGap(212))
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(425)
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(463, Short.MAX_VALUE))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(157)
+							.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 751, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(75)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnNewButton_1)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(lblNewLabel_2)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addGap(59)
+											.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 121, GroupLayout.PREFERRED_SIZE)
+											.addGap(28)
+											.addComponent(txtCorreo, GroupLayout.PREFERRED_SIZE, 317, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED, 108, Short.MAX_VALUE))
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addGap(189)
+											.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 112, GroupLayout.PREFERRED_SIZE)
+											.addPreferredGap(ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
+											.addComponent(lblNewLabel_1_1, GroupLayout.PREFERRED_SIZE, 132, GroupLayout.PREFERRED_SIZE)
+											.addGap(39)))))))
+					.addGap(92))
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(87)
+					.addGap(54)
+					.addComponent(btnNewButton_1)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(lblNewLabel_1, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
-					.addGap(39)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(50)
+							.addGap(89)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(txtCorreo, GroupLayout.PREFERRED_SIZE, 37, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblNewLabel))
+								.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE))
 							.addGap(146)
-							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
-							.addGap(57))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(18)
-							.addComponent(lblNewLabel_2)
-							.addContainerGap(156, Short.MAX_VALUE))))
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 34, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel_1_1)))
+						.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 230, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(57, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}

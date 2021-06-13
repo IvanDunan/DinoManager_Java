@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
+import model.User;
 
 import javax.swing.JTextField;
 import javax.crypto.BadPaddingException;
@@ -133,7 +134,7 @@ public class Login extends JFrame {
 		        	Connection connection = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/dinomanager_database3","root", "root"); 
 		        	
 		        	//CREO MI OBJETO STATEMENT Y EJECUTO LA QUERY
-	                PreparedStatement st = (PreparedStatement) connection.prepareStatement("Select user_name, password from users where user_name=? and password=?"); //Se comprueban todos los usuarios y sus contraseñas
+	                PreparedStatement st = (PreparedStatement) connection.prepareStatement("Select user_name, password, name, surnames, sex, age, email, id_institution, id_type, id_subject from users where user_name=? and password=?"); //Se comprueban todos los usuarios y sus contraseñas
 		            
 		            st.setString(1, userName);
 		            st.setString(2, password);
@@ -154,8 +155,34 @@ public class Login extends JFrame {
 		            	System.out.println("El campo usuario está vacío");
 		            }
 		            else if (rs.next()) { //En caso de haber información en los dos campos se procederá a comprobar si es correcta
-		                dispose();
-		                Teacher_Home ah = new Teacher_Home(userName);
+		            	User myUser = new User(0,userName,password,"default","default","m",0,"default",1,1,1);
+		            	String name = rs.getString("name");
+		    			myUser.setName(name);
+		    			String surnames = rs.getString("surnames");
+		    			myUser.setSurnames(surnames);
+		    			String sex = rs.getString("sex");
+		    			myUser.setSex(sex);
+		    			String age = rs.getString("age");
+		    			int AgeInteger;
+		    			AgeInteger = Integer.parseInt(age);
+		    			myUser.setAge(AgeInteger);
+		    			String email = rs.getString("email");
+		    			myUser.setEmail(email);
+		    			int id_institution = rs.getInt("id_institution");
+		    			myUser.setId_institution(id_institution);
+		    			int id_type = rs.getInt("id_type");
+		    			myUser.setId_type(id_type);
+		    			int id_subject = rs.getInt("id_subject");
+		    			myUser.setId_subject(id_subject);
+		    			
+		                
+		                //PreparedStatement st2 = (PreparedStatement) connection.prepareStatement("SELECT user_name, password, name, surnames, sex, age, email, id_institution, id_type, id_subject FROM users WHERE user_name=? and password=?");
+		                
+		    			
+		    			st.close();
+		    			//st2.close();
+		    			dispose();
+		                Teacher_Home ah = new Teacher_Home(myUser);
 		                ah.setTitle("Bienvenido ");
 		                ah.setVisible(true);
 		                JOptionPane.showMessageDialog(btnLogin, "Bienvenido "+ userName +", se ha iniciado sesión correctamente");
@@ -180,6 +207,7 @@ public class Login extends JFrame {
 		        Register obj = new Register();
                 obj.setTitle("Registro");
                 obj.setVisible(true);
+                dispose();
 			}
 		});
 		
@@ -200,6 +228,7 @@ public class Login extends JFrame {
 		        PasswordRecover obj = new PasswordRecover();
                 obj.setTitle("Registro");
                 obj.setVisible(true);
+                dispose();
 				
 			}
 		});
@@ -210,9 +239,9 @@ public class Login extends JFrame {
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
+					.addGap(22)
 					.addComponent(lblImage)
-					.addGap(31)
+					.addGap(19)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(18)
@@ -244,30 +273,31 @@ public class Login extends JFrame {
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblImage)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(43)
-							.addComponent(lblImageLogo)
-							.addGap(66)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblUserName)
-								.addComponent(textField_UserName, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(textField_Password, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblPassword))
-							.addGap(36)
-							.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-							.addGap(18)
-							.addComponent(btnRegister, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-							.addGap(27)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnNewButton)
-								.addComponent(lblNewLabel))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(lblNewLabel_1)))
-					.addContainerGap(38, Short.MAX_VALUE))
+					.addGap(43)
+					.addComponent(lblImageLogo)
+					.addGap(66)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblUserName)
+						.addComponent(textField_UserName, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(textField_Password, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblPassword))
+					.addGap(36)
+					.addComponent(btnLogin, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(btnRegister, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+					.addGap(27)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btnNewButton)
+						.addComponent(lblNewLabel))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(lblNewLabel_1)
+					.addContainerGap(60, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap(28, Short.MAX_VALUE)
+					.addComponent(lblImage)
+					.addContainerGap())
 		);
 		contentPane.setLayout(gl_contentPane);
 		 

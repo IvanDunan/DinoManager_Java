@@ -1,5 +1,9 @@
 package dinomanager;
 
+import model.User;
+import dao.*;
+import dao.mysql.*;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -22,30 +26,36 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JToolBar;
 import javax.swing.JComboBox;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ImageIcon;
 
 public class Teacher_Home extends JFrame {
+	
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-
     /**
      * Launch the application.
      */
     public static void main(String[] args) {
+    	
         EventQueue.invokeLater(new Runnable() {
             public void run() {
+            	
                 try {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-        });
+            
+        }
+        );
     }
 
     /**
      * Create the frame.
      */
-    public Teacher_Home(String userSes) {
+    public Teacher_Home(User myUser) {
 
     	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Comportamiento del programa al cerrar ventana: El programase cierra si cerramos esta ventana
 		Toolkit MyScreen = Toolkit.getDefaultToolkit(); //Necesario para poder adaptar la ventana a la resolución de diferentes pantallas
@@ -67,6 +77,45 @@ public class Teacher_Home extends JFrame {
         JLabel lblNewLabel = new JLabel("Opciones sobre tu cuenta");
         lblNewLabel.setFont(new Font("Consolas", Font.BOLD, 14));
         
+        JButton btnChangePassword = new JButton("Cambiar contrase\u00F1a");
+        btnChangePassword.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		//ChangePassword bo = new ChangePassword(userSes);
+                //bo.setTitle("Change Password");
+                //bo.setVisible(true);
+        	}
+        });
+        
+        JButton btnInformation = new JButton("Consultar informaci\u00F3n");
+        btnInformation.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        
+        JButton btnModify = new JButton("Modificar datos");
+        btnModify.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		dispose();
+                Info_Modify obj = new Info_Modify(myUser);
+                obj.setTitle("Modificación de datos");
+                obj.setVisible(true);
+        	}
+        });
+        
+        
+        
+        JButton btnTeacherRegisterStudent = new JButton("Registrar un alumno");
+        
+        JLabel lblNewLabel_1 = new JLabel("\u00A9 2021 - DinoManager");
+        
+        System.out.println("SE HA INICIADO SESION CORRECTAMENTE CON LOS DATOS:" + myUser);
+        System.out.println();
+        
+        JLabel lblNewLabel_2 = new JLabel("Usuario: "+ myUser.getName()+" "+ myUser.getSurnames());
+        
+        JLabel lblImage = new JLabel("");
+          lblImage.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Dinosaurio_Bienvenida_transparency.png")).getImage().getScaledInstance(475, 410, Image.SCALE_SMOOTH)));
+        
         JButton btnLogout = new JButton("Cerrar sesi\u00F3n");
         btnLogout.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -79,45 +128,77 @@ public class Teacher_Home extends JFrame {
                     obj.setVisible(true);
                 }
                 dispose();
-                //Teacher_Home obj = new Teacher_Home(userSes);
-
-                //obj.setTitle("Student-Login");
-                //obj.setVisible(true);
         	}
         });
         
-        JButton btnChangePassword = new JButton("Cambiar contrase\u00F1a");
-        btnChangePassword.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent e) {
-        		ChangePassword bo = new ChangePassword(userSes);
-                bo.setTitle("Change Password");
-                bo.setVisible(true);
-        	}
-        });
+        JLabel lblNewLabel_1_1 = new JLabel("\u00A9 2021 - DinoManager");
         
+        //lblImage.setIcon(new ImageIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Pet1_Dinomanager_noborder.png")).getImage().getScaledInstance(470, 500, Image.SCALE_SMOOTH)));
         GroupLayout gl_contentPane = new GroupLayout(contentPane);
         gl_contentPane.setHorizontalGroup(
         	gl_contentPane.createParallelGroup(Alignment.LEADING)
-        		.addComponent(toolBar, GroupLayout.DEFAULT_SIZE, 944, Short.MAX_VALUE)
+        		.addComponent(toolBar, GroupLayout.DEFAULT_SIZE, 1010, Short.MAX_VALUE)
         		.addGroup(gl_contentPane.createSequentialGroup()
-        			.addContainerGap(729, Short.MAX_VALUE)
-        			.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-        				.addComponent(lblNewLabel)
-        				.addComponent(btnLogout, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
-        				.addComponent(btnChangePassword, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        			.addGap(22))
+        			.addGap(796)
+        			.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+        			.addContainerGap())
+        		.addGroup(gl_contentPane.createSequentialGroup()
+        			.addGap(28)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+        				.addGroup(gl_contentPane.createSequentialGroup()
+        					.addGap(34)
+        					.addComponent(lblImage, GroupLayout.PREFERRED_SIZE, 470, GroupLayout.PREFERRED_SIZE)
+        					.addPreferredGap(ComponentPlacement.RELATED, 254, Short.MAX_VALUE)
+        					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+        						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+        							.addGroup(gl_contentPane.createSequentialGroup()
+        								.addComponent(btnChangePassword, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        								.addPreferredGap(ComponentPlacement.RELATED))
+        							.addGroup(gl_contentPane.createSequentialGroup()
+        								.addComponent(btnTeacherRegisterStudent, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+        								.addPreferredGap(ComponentPlacement.RELATED))
+        							.addGroup(gl_contentPane.createSequentialGroup()
+        								.addComponent(btnModify, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+        								.addPreferredGap(ComponentPlacement.RELATED))
+        							.addGroup(gl_contentPane.createSequentialGroup()
+        								.addComponent(btnInformation, GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
+        								.addPreferredGap(ComponentPlacement.RELATED))
+        							.addGroup(gl_contentPane.createSequentialGroup()
+        								.addComponent(lblNewLabel)
+        								.addGap(22)))
+        						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+        							.addComponent(lblNewLabel_1_1, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)
+        							.addComponent(btnLogout, GroupLayout.PREFERRED_SIZE, 204, GroupLayout.PREFERRED_SIZE)))
+        					.addGap(10))
+        				.addComponent(lblNewLabel_2, GroupLayout.DEFAULT_SIZE, 982, Short.MAX_VALUE)))
         );
         gl_contentPane.setVerticalGroup(
         	gl_contentPane.createParallelGroup(Alignment.LEADING)
         		.addGroup(gl_contentPane.createSequentialGroup()
         			.addComponent(toolBar, GroupLayout.PREFERRED_SIZE, 30, GroupLayout.PREFERRED_SIZE)
-        			.addGap(61)
-        			.addComponent(lblNewLabel)
         			.addGap(18)
-        			.addComponent(btnLogout)
-        			.addGap(18)
-        			.addComponent(btnChangePassword)
-        			.addGap(311))
+        			.addComponent(lblNewLabel_2)
+        			.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+        				.addGroup(gl_contentPane.createSequentialGroup()
+        					.addGap(30)
+        					.addComponent(lblNewLabel)
+        					.addGap(18)
+        					.addComponent(btnInformation)
+        					.addGap(18)
+        					.addComponent(btnModify)
+        					.addGap(18)
+        					.addComponent(btnTeacherRegisterStudent)
+        					.addGap(18)
+        					.addComponent(btnChangePassword)
+        					.addGap(131)
+        					.addComponent(btnLogout)
+        					.addGap(47)
+        					.addComponent(lblNewLabel_1_1)
+        					.addGap(2574)
+        					.addComponent(lblNewLabel_1))
+        				.addGroup(gl_contentPane.createSequentialGroup()
+        					.addPreferredGap(ComponentPlacement.RELATED)
+        					.addComponent(lblImage, GroupLayout.PREFERRED_SIZE, 458, GroupLayout.PREFERRED_SIZE))))
         );
         
         JButton btnTeacherReport = new JButton("|Consultar informe de alumnos|");
@@ -125,8 +206,9 @@ public class Teacher_Home extends JFrame {
         btnTeacherReport.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         		System.out.println("Se ha pulsado el botón de informe");
-		        Table obj = new Table();
-                //obj.setTitle("Registro");
+        		
+		        Table obj = new Table(myUser);
+                obj.setTitle("Reporte de alumnos");
                 obj.setVisible(true);
         	}
         });

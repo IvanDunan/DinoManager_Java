@@ -1,5 +1,8 @@
 package dinomanager;
 
+import model.User;
+import dao.UserDAO;
+import dao.mysql.MySQLUserDAO;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -35,6 +38,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,6 +54,9 @@ import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import java.awt.Color;
+import java.awt.SystemColor;
+import javax.swing.JPasswordField;
 
 public class Register extends JFrame {
 
@@ -57,7 +64,6 @@ public class Register extends JFrame {
 	private JTextField textField_Name;
 	private JTextField textField_Surnames;
 	private JTextField textField_UserName;
-	private JTextField textField_Password;
 	private JTextField textField_Age;
 	private JLabel lblSex;
 	private JTextField textField_Email;
@@ -66,6 +72,7 @@ public class Register extends JFrame {
 	private JLabel lblImage2;
 	private JButton btnRegisterTeacher;
 	private JLabel lblNewLabel;
+	private JPasswordField passwordField;
 
 	/**
 	 * Launch the application.
@@ -96,7 +103,7 @@ public class Register extends JFrame {
 															// el programa se está ejecutando
 		int HeightScreen = ScreenSize.height; // Guardo en variables el alto y ancho de la pantalla
 		int WidthScreen = ScreenSize.width;
-		setBounds(WidthScreen / 4 + 100, HeightScreen / 4 + 100, WidthScreen / 2, HeightScreen / 2); // (ANCHO VENTANA,
+		setBounds(WidthScreen / 4, HeightScreen / 4, WidthScreen / 2, HeightScreen / 2); // (ANCHO VENTANA,
 																										// ALTO VENTANA,
 																										// CORDENADA X,
 																										// CORDENADA Y)
@@ -129,12 +136,12 @@ public class Register extends JFrame {
 
 		textField_UserName = new JTextField();
 		textField_UserName.setColumns(10);
+		
+		passwordField = new JPasswordField();
+		passwordField.setColumns(10);
 
 		JLabel lblPassword = new JLabel("Contrase\u00F1a:");
 		lblPassword.setFont(new Font("Consolas", Font.BOLD, 14));
-
-		textField_Password = new JTextField();
-		textField_Password.setColumns(10);
 
 		JLabel lblAge = new JLabel("Edad:");
 		lblAge.setFont(new Font("Consolas", Font.BOLD, 14));
@@ -204,16 +211,30 @@ public class Register extends JFrame {
 		
 		btnRegisterTeacher.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) { // Recogemos todos los datos de nuestros textfield
+				
 				String Name = textField_Name.getText();
 				String Surnames = textField_Surnames.getText();
 				String UserName = textField_UserName.getText();
-				String Password = textField_Password.getText();
+				String Password = passwordField.getText();
 				String Age = textField_Age.getText();
+				int AgeInteger=0;
+				boolean isNumeric =  Age.matches("[+-]?\\d*(\\.\\d+)?");
+				try {
+					//System.out.println(isNumeric(Age));
+					
+					AgeInteger = Integer.parseInt(Age);
+					
+				}
+				catch (NumberFormatException ex){
+					JOptionPane.showMessageDialog(btnRegisterTeacher, "La edad debe intoducirse en valores numéricos");
+		        }
+				
+				
 				String Email = textField_Email.getText();
 				String Institution = textField_Institution.getText();
 				String Signature = textField_Signature.getText();
-				char Sex='m';
-				int UserType = 1;
+				String Sex = "f";
+				int UserType=1;
 				
 				if(chckbxTeacher.isSelected()) //Compruebo si el checkbox del profesor está marcado
 				{
@@ -226,13 +247,12 @@ public class Register extends JFrame {
 				
 				if(chckbxMale.isSelected()) //Compruebo si el checkbox del profesor está marcado
 				{
-					Sex='m';
+					Sex="m";
 				}
 				else if (chckbxFemale.isSelected()) //Si ese usuario no es profesor entoces es alumno
 				{
-					Sex='f';
+					Sex="f";
 				}
-				
 				
 				try {
 		            final String claveEncriptacion = "secreto!";            
@@ -244,9 +264,6 @@ public class Register extends JFrame {
 		             
 		            String encriptado = encriptador.encriptar(datosOriginales, claveEncriptacion);
 		            String desencriptado = encriptador.desencriptar(encriptado, claveEncriptacion);
-		             
-		            
-		            System.out.println("Contraseña encriptada correctamente     : " + encriptado);
 		            
 		            Password = encriptado;
 		             
@@ -254,53 +271,61 @@ public class Register extends JFrame {
 		            Logger.getLogger(AESencryptor.class.getName()).log(Level.SEVERE, null, ex);
 		        }
 				
-				
-
-				System.out.println("Datos recogidos: " + Name + " " + Surnames + " " + UserName + " " + Password + " "
-						+ Age + " " + Sex + " " + Email + " " + Institution + " " + Signature);
-
-				String msg = "" + Name;
-				msg += " \n";
 				if ((Name.equals(""))||(Surnames.equals(""))||(UserName.equals(""))||(Password.equals(""))
 						||(Age.equals(""))||(Email.equals(""))) {// EN CASO DE ALGÚN CAMPO VACÍO
 					JOptionPane.showMessageDialog(btnRegisterTeacher, "Por favor, rellene todos los campos");
+					System.out.println("No se han rellenado todos los datos para el registro.");
 				}
 				else if (Age.length() > 2) { //EN CASO DE EDAD INCORRECTA
 					JOptionPane.showMessageDialog(btnRegisterTeacher, "Por favor, introduce una edad correcta");
-				} else {
-					try {
-						Connection connection = (Connection) DriverManager
-								.getConnection("jdbc:mysql://localhost:3306/dinomanager_database3", "root", "root");
-						
-						
-						String query = "INSERT INTO users values('" + "0" + "','" + UserName + "','" + Password + "','"
-								+ Name + "','" + Surnames + "','" + Sex + "','" + Age + "','" + Email + "','" + 1
-								+ "','" + UserType + "','" + 1 + "')";
-
-						Statement sta = connection.createStatement();
-						int x = sta.executeUpdate(query);
-						if (x == 0) {
-							JOptionPane.showMessageDialog(btnRegisterTeacher, "Esta cuenta ya existe");
-						} else {
-							JOptionPane.showMessageDialog(btnRegisterTeacher,
-									"Bienvenido, " + msg + "tu cuanta ha sido creada correctamente");
-							//EmailSenderService m=new EmailSenderService("config/configuracion.prop");
-							
-						}
-						connection.close();
-					} catch (Exception exception) {
-						exception.printStackTrace();
-					}
-
 				}
-
-			}
-
-			// }
-		});
+				else {
+					try {
+						Connection conn = (Connection) DriverManager.getConnection("jdbc:mysql://localhost:3306/dinomanager_database3", "root", "root");
+						UserDAO dao = new MySQLUserDAO(conn);
+						User myUser = new User(0,UserName,Password,Name,Surnames,Sex,AgeInteger,Email,1,UserType,1);
+						System.out.println("Contraseña cifrada correctamente: "+Password);
+						dao.insert(myUser);
+						System.out.println(myUser);
+						
+						JOptionPane.showMessageDialog(btnRegisterTeacher,"Bienvenido, " + Name + " tu cuanta ha sido creada correctamente");
+						Teacher_Home ah = new Teacher_Home(myUser);
+						
+		                ah.setTitle("Bienvenido: "+ myUser.getName() + " "+ myUser.getSurnames());
+		                ah.setVisible(true);
+		                dispose();
+						//EmailSenderService m=new EmailSenderService("config/configuracion.prop");
+						
+						conn.close();
+						
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				} 
+		}}
+			);
 		btnRegisterTeacher.setFont(new Font("Consolas", Font.BOLD, 14));
 
 		lblNewLabel = new JLabel("\u00A9 2021 - DinoManager");
+		
+		JButton btnBack = new JButton("\u2190 Volver al login");
+		btnBack.setBackground(SystemColor.activeCaptionBorder);
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+				Login obj = new Login();
+				obj.setTitle("Login");
+				obj.setVisible(true);
+                
+                
+			}
+		});
+		
+		JLabel lblNewLabel_4 = new JLabel("\u00BFYa est\u00E1s registrado?");
+		lblNewLabel_4.setForeground(Color.RED);
+		
+
 		
 		
 		
@@ -316,32 +341,38 @@ public class Register extends JFrame {
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 								.addComponent(lblName)
 								.addComponent(lblSurnames)
-								.addComponent(lblUserName)
 								.addComponent(lblPassword)
 								.addComponent(lblAge)
 								.addComponent(lblSex)
 								.addComponent(lblEmail)
 								.addComponent(lblNewLabel_1)
 								.addComponent(lblNewLabel_2)
-								.addComponent(lblNewLabel_3))
-							.addGap(31)
+								.addComponent(lblNewLabel_3)
+								.addComponent(lblUserName)
+								.addComponent(lblNewLabel_4))
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-									.addComponent(chckbxMale)
-									.addPreferredGap(ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
-									.addComponent(chckbxFemale, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
 								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(chckbxTeacher)
-									.addPreferredGap(ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
-									.addComponent(chckbxStudent, GroupLayout.PREFERRED_SIZE, 78, GroupLayout.PREFERRED_SIZE))
-								.addComponent(textField_Signature, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-								.addComponent(textField_Institution, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-								.addComponent(textField_Email, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-								.addComponent(textField_Age, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-								.addComponent(textField_Password, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-								.addComponent(textField_UserName, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-								.addComponent(textField_Name, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
-								.addComponent(textField_Surnames, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)))
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnBack))
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGap(31)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addComponent(passwordField, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+										.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+											.addComponent(chckbxMale)
+											.addPreferredGap(ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+											.addComponent(chckbxFemale, GroupLayout.PREFERRED_SIZE, 80, GroupLayout.PREFERRED_SIZE))
+										.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+											.addComponent(chckbxTeacher)
+											.addPreferredGap(ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+											.addComponent(chckbxStudent, GroupLayout.PREFERRED_SIZE, 78, GroupLayout.PREFERRED_SIZE))
+										.addComponent(textField_Signature, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+										.addComponent(textField_Institution, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+										.addComponent(textField_Email, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+										.addComponent(textField_Age, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+										.addComponent(textField_UserName, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+										.addComponent(textField_Name, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)
+										.addComponent(textField_Surnames, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE)))))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addContainerGap()
 							.addComponent(btnRegisterTeacher, GroupLayout.PREFERRED_SIZE, 217, GroupLayout.PREFERRED_SIZE)))
@@ -359,7 +390,11 @@ public class Register extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addComponent(lblImage2, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 503, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addContainerGap(94, Short.MAX_VALUE)
+							.addContainerGap()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(btnBack)
+								.addComponent(lblNewLabel_4))
+							.addGap(34)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblName)
 								.addComponent(textField_Name, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -372,10 +407,10 @@ public class Register extends JFrame {
 								.addComponent(lblUserName)
 								.addComponent(textField_UserName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblPassword)
-								.addComponent(textField_Password, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(18)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
+								.addComponent(passwordField, 0, 0, Short.MAX_VALUE)
+								.addComponent(lblPassword, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+							.addGap(20)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lblAge)
 								.addComponent(textField_Age, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))

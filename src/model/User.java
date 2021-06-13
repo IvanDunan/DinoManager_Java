@@ -10,15 +10,15 @@ public class User  {
 	private String password;
 	private String name;
 	private String surnames;
-	private char sex;
+	private String sex;
 	private int age;
 	private String email;
 	private long id_institution;
 	private long id_type;
 	private long id_subject;
 	
-
-	public User(long id, String user_name, String password, String name, String surnames, char sex, int age,
+	//CONSTRUCTOR
+	public User(long id, String user_name, String password, String name, String surnames, String sex, int age,
 			String email, long id_institution, long id_type, long id_subject) {
 		super();
 		this.id = id;
@@ -84,12 +84,12 @@ public class User  {
 	}
 
 
-	public char getSex() {
+	public String getSex() {
 		return sex;
 	}
 
 
-	public void setSex(char sex) {
+	public void setSex(String sex) {
 		this.sex = sex;
 	}
 
@@ -155,7 +155,7 @@ public class User  {
 		result = prime * result + (int) (id_type ^ (id_type >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + sex;
+		result = prime * result + ((sex == null) ? 0 : sex.hashCode());
 		result = prime * result + ((surnames == null) ? 0 : surnames.hashCode());
 		result = prime * result + ((user_name == null) ? 0 : user_name.hashCode());
 		return result;
